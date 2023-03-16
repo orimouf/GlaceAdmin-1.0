@@ -1,0 +1,22 @@
+.msgContainer {
+    display: none;
+    position: fixed;
+    top: 0;
+    background-color: #41de3ed1;
+    border: 1px solid #1cbf0ab3;
+    margin: 20px;
+    padding: 10px;
+    width: -webkit-fill-available;
+    color: white;
+    font-size: large;
+    font-weight: 700;
+    text-align: center;
+    animation-name: example;
+    animation-duration: 2s;
+}
+
+@keyframes example {
+    0%   {opacity: 0;}
+    50% {opacity: 1;}
+    100% {opacity: 1;}
+  }

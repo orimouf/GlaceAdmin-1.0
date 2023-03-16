@@ -1,0 +1,72 @@
+.green {
+    color: green;
+    font-weight: 600;
+}
+
+.cellWrapper {
+    display: flex;
+    align-items: center;
+
+    .image {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        margin-right: 10px;
+        object-fit: cover;
+    }
+}
+
+.status {
+    padding: 5px;
+    border-radius: 5px;
+
+    &.Sended {
+        color: green;
+        background-color: rgba(0, 128, 0, 0.151);
+    } 
+
+    &.Pending {
+        color: goldenrod;
+        background-color: rgba(189, 189, 3, 0.103);
+    }
+}
+
+.percentage {
+    color: gray;
+}
+
+.days {
+    font-size: xx-small;
+    color: gray;
+}
+
+.action {
+    display: initial;
+    padding: 5px;
+    border-radius: 5px;
+
+    &.Send {
+        color: green;
+        background-color: rgba(0, 128, 0, 0.151);
+        border: 1px solid green;
+
+        &:hover {
+            cursor: pointer;
+            color: white;
+            background-color: rgb(0 128 0 / 75%);
+        }
+    }
+
+    &.Edit {
+        color: rgb(0 108 164);
+        background-color: rgb(0 108 164 / 29%);
+        border: 1px solid rgb(0 108 164);
+
+        &:hover {
+            cursor: pointer;
+            color: white;
+            background-color: rgb(0 108 164 / 75%);
+        }
+    }
+
+}

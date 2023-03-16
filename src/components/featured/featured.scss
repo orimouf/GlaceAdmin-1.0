@@ -1,0 +1,101 @@
+.featured {
+    flex: 2;
+    -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+    box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+    padding: 10px;
+
+    .featuredTop {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: gray;
+
+        .title {
+            font-size: 16px;
+            font-weight: 500;
+        }        
+    }
+
+    .featuredBottom {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+
+        .featuredChart {
+            width: 100px;
+            height: 100px;
+        }
+
+        .featuredSales {
+            width: -webkit-fill-available;
+            padding: 2px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+        
+            .title {
+                font-weight: 500;
+                color: gray;
+                margin-bottom: 0;
+            }
+    
+            .amount {
+                color: green;
+                font-size: 20px;
+            }
+        }
+
+        .featuredCapitalProfit {
+            width: -webkit-fill-available;
+            padding: 2px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+        
+            .title {
+                font-size: small;
+                font-weight: 400;
+                color: gray;
+                margin-bottom: 0;
+            }
+    
+            .amount {
+                color: rgb(0, 0, 0);
+                font-size: 16px;
+            }
+        }
+        
+
+        .summary {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .item {
+                text-align: center;
+
+                .itemTitle {
+                    font-size: 14px;
+                    color: gray;
+                }
+
+                .itemResult {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    margin-top: 10px;
+                    font-size: 14px;
+                
+                    &.positive {color: green;}
+                    &.negative {color: red;}
+                }
+            }
+        }
+    }
+}
