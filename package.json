@@ -14,8 +14,10 @@
     "axios": "^1.3.4",
     "date-fns": "^2.29.3",
     "node-sass": "8.0",
+    "notistack": "^3.0.1",
     "react": "^18.2.0",
     "react-circular-progressbar": "^2.1.0",
+    "react-confirm": "^0.3.0-7",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.9.0",
     "react-scripts": "^5.0.1",
@@ -50,5 +52,5 @@
     "sass-loader": "^13.2.0",
     "webpack": "^5.76.2"
   },
-  "proxy": "https://api-sh.onrender.com/api/"
+  "proxy": "https://glace-api.onrender.com/api/"
 }

@@ -1,0 +1,59 @@
+.view {
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+    border-radius: 10px;
+    background: white;
+
+    .left {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex: 3;
+
+        p {
+            padding: 0;
+        }
+    }
+
+    .right  {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        flex: 1;
+
+        .title {
+            display: flex;
+            gap: 20px;
+            color: black;
+        }
+
+        h3 {
+            text-align: center;
+            color: #383737;
+            border-bottom: 1px solid #383737;
+        }
+        div {
+            p {
+                display: flex;
+                justify-content: space-between;
+                margin: 0;
+            }
+        }
+        
+    }
+
+    .XContainer {
+        button {
+            border: 0;
+            background: 0;
+            color: #7c7c7c;
+            font-size: larger;
+            cursor: pointer;
+
+            &:hover {
+                color: black;
+            }
+        }
+    }
+}

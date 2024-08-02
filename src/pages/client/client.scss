@@ -1,0 +1,186 @@
+.client {
+    display: flex;
+    width: 100%;
+
+    .clientContainer {
+        flex: 6;
+
+        .top {
+            display: flex;
+            flex-direction: row;
+            box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+            padding: 20px;
+            margin: 10px 20px;
+            background-color: white;
+
+            .left {
+                flex: 1;
+                display: flex;
+                gap: 40px;
+                line-height: 2;
+
+                label {
+                    font-weight: 500;
+                }         
+                
+                .typeLable, .typeInput {
+                    display: flex;
+                    gap: 20px;
+                }
+            }
+
+            .right {
+                flex: 0;
+
+                .search {
+                    display: flex;
+                    align-items: center;
+                    border: 0.5px solid lightgray;
+                    padding: 3px;
+        
+                    input {
+                        border: none;
+                        outline: none;
+                        background-color: transparent;
+                    }
+        
+                    input::placeholder {font-size: 12px;}
+                }
+
+            }
+        }
+
+        .midel {
+            padding: 20px;
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            background-color: white;
+
+            .left {
+                flex: 1;              
+            }
+
+            .right {
+                display: flex;
+                flex: 2;
+            }
+        }
+
+        .bottom {
+            display: flex;
+            flex-direction: column;
+            -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+            box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+            padding: 20px;
+            margin: 10px 20px;
+            background-color: white;
+
+            .gridContainer {
+                display: flex;
+                flex-direction: row;
+
+                .title {
+                    font-size: 16px;
+                    color: lightgray;
+                    margin-bottom: 20px;
+                    flex: 3;
+                }
+
+                .actionContainer {
+                    display: flex;
+                    flex: 1;
+                }
+            }
+
+            .cellWithStatus {
+                padding: 5px;
+                border-radius: 5px;
+            
+                &.Sended {
+                    color: green;
+                    background-color: rgba(0, 128, 0, 0.151);
+                } 
+            
+                &.Pending {
+                    color: goldenrod;
+                    background-color: rgba(189, 189, 3, 0.103);
+                }
+            }
+            
+            .cellWithPercentage {
+                color: gray;
+            }
+            
+            .cellWithDate {
+                .days {
+                    font-size: xx-small;
+                    color: gray;
+                }
+            }
+            
+            .action {
+                display: flex;
+                padding: 5px;
+                border-radius: 5px;
+                width: 100%;
+                justify-content: center;
+                margin: 0 5px;
+                height: fit-content;
+
+                .icnSpinnerEdit, .icnSpinnerDelete {
+                    animation: spin-animation 1s infinite;
+                    display: none;
+                }
+                  
+                @keyframes spin-animation {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(-359deg); }
+                }
+            
+                &.Edit {
+                    color: green;
+                    background-color: rgba(0, 128, 0, 0.151);
+                    border: 1px solid green;
+            
+                    &:hover {
+                        cursor: pointer;
+                        color: white;
+                        background-color: rgb(0 128 0 / 75%);
+                    }
+                }
+            
+                &.View {
+                    color: rgb(0 108 164);
+                    background-color: rgb(0 108 164 / 29%);
+                    border: 1px solid rgb(0 108 164);
+            
+                    &:hover {
+                        cursor: pointer;
+                        color: white;
+                        background-color: rgb(0 108 164 / 75%);
+                    }
+                }
+
+                &.Delete {
+                    color: rgb(128, 117, 0);
+                    background-color: rgba(128, 126, 0, 0.151);
+                    border: 1px solid rgb(128, 115, 0);
+                    
+                    &:hover {
+                        cursor: pointer;
+                        color: white;
+                        background-color: rgb(128 117 0 / 75%);
+                    }
+                }
+            
+            }
+        }
+
+        .dataTable {
+            height: 100%;
+            padding: 20px;
+        }
+        
+    }
+}

@@ -33,7 +33,7 @@ const Sidebar = () => {
     <div className='sidebar'>
         <div className="top">
             <Link to="/" style={{ textDecoration: "none" }}>
-                <span className='logo'>admin app</span>
+                <span className='logo'>Admin Glace App</span>
             </Link>
         </div>
         <hr />
@@ -53,13 +53,13 @@ const Sidebar = () => {
                         <span>Users</span>
                     </li>
                 </Link>
-                <Link to="/investors" style={{ textDecoration: "none" }}>
+                <Link to="/register" style={{ textDecoration: "none" }}>
                     <li>
-                        <CurrencyExchangeOutlinedIcon className="icon" />
-                        <span>Investors</span>
+                        <AutoStoriesIcon className="icon" />
+                        <span>REGISTRE</span>
                     </li>
                 </Link>
-                <Link to="/" style={{ textDecoration: "none" }}>
+                <Link to="/orders" style={{ textDecoration: "none" }}>
                     <li>
                         <AutoStoriesIcon className="icon" />
                         <span>Orders</span>

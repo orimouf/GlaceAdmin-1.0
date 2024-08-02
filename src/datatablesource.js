@@ -2,8 +2,50 @@ import React from 'react'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Link } from 'react-router-dom';
 
+// Purchase Prices
+export const purchasePrices = {
+    bac_5_q_u: 700,
+    bac_6_q_u: 900,
+    bf_150_q_u: 110,
+    bf_200_q_u: 150, // old price
+    bf_210_q_u: 175, // old price
+    bf_230_q_u: 200, // old price
+    bf_250_q_u: 210,
+    bf_300_q_u: 260, // old price
+    bf_330_q_u: 280, // old price
+    bf_400_q_u: 300, // old price
+    big_q_u: 28,
+    bingo_premium_q_u: 240, // old price
+    bingo_prm_q_u: 40, // old price
+    bloom_prm_q_u: 35, // old price
+    buch_q_u: 405, // old price
+    cornito_4_q_u: 40.5,
+    cornito_5_q_u: 40.5,
+    cornito_g_q_u: 61, // old price
+    cornito_prm_q_u: 45, // old price
+    g8_q_u: 38,
+    gini_q_u: 37, // old price
+    gofrito_q_u: 26, // old price
+    gold_q_u: 40.5,
+    juliana_q_u: 69,
+    mini_prm_q_u: 28, // old price
+    mini_q_u: 22.5,
+    mini_scobido_q_u: 18,
+    misso_q_u: 43,
+    mosta_q_u: 52,
+    pot_prm_q_u: 28, // old price
+    pot_q_u: 22.5,
+    pot_v_q_u: 28, // old price
+    scobido_q_u: 25,
+    selection_q_u: 260, // old price
+    skiper_q_u: 54, // old price
+    solo_q_u: 21,
+    tarte_q_u: 405, // old price
+    trio_q_u: 23, // old price
+    venezia_q_u: 28 // old price
+}
 
-//temporary dtat
+//temporary data
 export const userColumns = [
     { field: "_id", headerName: "ID", width: 250},
     { field: "fullName", headerName: "User Full Name", width: 220, 
@@ -51,40 +93,88 @@ export const investorColumns = [
 
 ]
 
-export const packageColumns = [
-    { field: "id", headerName: "ID", width: 80},
-    { field: "capital", headerName: "Capital", width: 120},
-    { field: "month", headerName: "Months", width: 120 },
-    { field: "profitPorcent", headerName: "Percentage", width: 120,
+export const packageColumns = []
+
+export const clientColumns = [
+    { field: "id", headerName: "ID", width: 60},
+    { field: "_id", headerName: "Client ID", width: 60},
+    { field: "appId", headerName: "App ID", width: 60},
+    { field: "clientName", headerName: "Client Name", width: 150},
+    { field: "phone", headerName: "Phone", width: 120 },
+    { field: "region", headerName: "Region", width: 120},
+    { field: "prices", headerName: "Prices", width: 120 },
+    { field: "oldCredit", headerName: "Old Credit", width: 100},
+    { field: "creditBon", headerName: "Bon Credit", width: 100},
+    { field: "lastServe", headerName: "Last Serve", width: 100},
+    { field: "isCredit", headerName: "Credit", width: 100,
     renderCell:(params)=>{
         return(
-            <div className={`cellWithPercentage`}>{params.row.profitPorcent} %</div>
+            <div className={`cellWithStatus ${params.row.isCredit}`}>{params.row.isCredit}</div>
         )
     }},
-    { field: "profit", headerName: "Profit", width: 120 },
-    { field: "status", headerName: "Status", width: 100, 
+    { field: "isFrigo", headerName: "Frigo", width: 100,
     renderCell:(params)=>{
         return(
-            <div className={`cellWithStatus ${params.row.status}`}>{params.row.status}</div>
+            <div className={`cellWithStatus ${params.row.isFrigo}`}>{params.row.isFrigo}</div>
         )
     }},
-    { field: "date", headerName: "Date", width: 220,
+    { field: "isPromo", headerName: "Promo", width: 100,
     renderCell:(params)=>{
         return(
-            <div className={`cellWithDate`}>
-                {params.row.date}  <span className="days">
-                          ( {(params.row.leftDays < 0) ? Math.abs(params.row.leftDays) + " Days ago": params.row.leftDays+" Days Left"} )
-                      </span>
-            </div>
+            <div className={`cellWithStatus ${params.row.isPromo}`}>{params.row.isPromo}</div>
+        )
+    }}
+]
+
+export const registerColumns = [
+    { field: "id", headerName: "ID", width: 60},
+    { field: "date", headerName: "Date", width: 100},
+    { field: "camion", headerName: "Camion", width: 100},
+    { field: "dailyCapital", headerName: "Daily Capital", width: 150},
+    { field: "dailyPayment", headerName: "Daily Payment", width: 120 },
+    { field: "dailyCredit", headerName: "Daily Credit", width: 120},
+    { field: "dailyProfit", headerName: "Daily Profit", width: 120 },
+    { field: "dailyWorkers", headerName: "Daily Workers", width: 150},
+    { field: "dailyFees", headerName: "Daily Fees", width: 300}
+]
+
+export const orderColumns = [
+    { field: "id", headerName: "ID", width: 60},
+    { field: "_id", headerName: "Order ID", width: 80},
+    { field: "appId", headerName: "App ID", width: 60},
+    { field: "clientName", headerName: "Client Name", width: 150},
+    { field: "clientId", headerName: "Client ID", width: 120 },
+    { field: "productListId", headerName: "ProductList ID", width: 120},
+    { field: "totalToPay", headerName: "Total To Pay", width: 120 },
+    { field: "verssi", headerName: "Verssi", width: 100},
+    { field: "rest", headerName: "Rest", width: 100},
+    { field: "profit", headerName: "Profit", width: 100},
+    { field: "date", headerName: "Date", width: 100},
+    { field: "isCredit", headerName: "Credit", width: 100,
+    renderCell:(params)=>{
+        return(
+            <div className={`cellWithStatus ${params.row.isCredit}`}>{params.row.isCredit}</div>
         )
     }},
-    { field: "action", headerName: "Action", width: 160, 
+    { field: "isCheck", headerName: "Check", width: 100,
     renderCell:(params)=>{
         return(
-            (params.row.status === "Sended") ? 
-            <div className="action View" >View</div> : 
-                params.row.leftDays <= 0 ? <div className="action Send" >Send</div> :
-                <div className="action Wait" >Coming soon</div> 
+            <div className={`cellWithStatus ${params.row.isFrigo}`}>{params.row.isCheck}</div>
+        )
+    }}
+]
+
+export const dailyColumns = [
+    { field: "id", headerName: "ID", width: 60},
+    { field: "date", headerName: "Date", width: 100},
+    { field: "totalSell", headerName: "Total Sell", width: 150},
+    { field: "totalDaily", headerName: "Total Daily", width: 150},
+    { field: "dailyProfit", headerName: "Daily Profit", width: 120},
+    { field: "dailyFee", headerName: "Daily Fees", width: 120 },
+    { field: "isCheck", headerName: "Check", width: 100,
+    renderCell:(params)=>{
+        return(
+            <div className={`cellWithStatus ${params.row.isFrigo}`}>{params.row.isCheck}</div>
         )
     }}
 ]

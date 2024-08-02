@@ -20,7 +20,7 @@ const Package = () => {
   const [ totalProfitPorcent, setTotalProfitPorcent ] = useState(0)
   const [ arrayData, setArrayData ] = useState([])
   const [ myPackage, setMyPackage ] = useState([])
-  const [ investor, setInvestor ] = useState({})
+  const [ clients, setClients ] = useState({})
   
   useEffect(function () {
     // let arrayData = []
@@ -28,37 +28,39 @@ const Package = () => {
       return addMonths(new Date(startDate), e)
     }
 
-    const fetchUserData = async () => {
-      await axios.get(`../investors/find/${params.investorId}`, {
-        headers: { token: `Bearer ${accessTokenObj}` }
-      })
-      .then(res => {
-        setInvestor(res.data)
-      })
-      .catch(function (error) {
-        if (error.response) {
-          console.log(error.response);
-        }
-      });
-    };
-    fetchUserData();
+    // const fetchClientsData = async () => {
+    //   await axios.get(`../clients/find/${params.clientsId}`, {
+    //     headers: { token: `Bearer ${accessTokenObj}` }
+    //   })
+    //   .then(res => {
+    //     // setClients(res.data)
+    //   })
+    //   .catch(function (error) {
+    //     if (error.response) {
+    //       console.log(error.response);
+    //     }
+    //   });
+    // };
+    // fetchClientsData();
 
     const fetchData = async () => {
-      await axios.get(`../packages/find/${params.investorId}`, {
-        headers: { token: `Bearer ${accessTokenObj}` }
+      console.log("data");
+      await axios.get(`../clients/`, {
+        //headers: { token: `Bearer ${accessTokenObj}` }
       })
       .then(res => {
         const data = res.data
-        setMyPackage(data)
+        console.log(data);
+        setClients(data)
         let array = []
         data.profit.map((receive, i) => (
 
           array.push(
             {
               id: i+1,
-              capital: "$" + investor.capitalAmount,
+              capital: "$" + clients.capitalAmount,
               month: receive.month,
-              profit: "$" + (parseInt(investor.capitalAmount) * ( receive.porcentage / 100)).toFixed(0),
+              profit: "$" + (parseInt(clients.capitalAmount) * ( receive.porcentage / 100)).toFixed(0),
               profitPorcent: receive.porcentage,
               date: nextDate(i+1, data.startDate).toLocaleDateString("fr-FR"),
               leftDays: Math.ceil((new Date(nextDate(i+1, data.startDate)).getTime() - new Date().getTime()) / (1000 * 3600 * 24)),
@@ -68,8 +70,8 @@ const Package = () => {
               
         ))
         setArrayData(array)
-        setSendProfitPorcent((data.profit.map(e => e.checkinSend ? e.porcentage:0).reduce((a,b) => (a+b))) * parseInt(investor.capitalAmount) / 100)
-        setTotalProfitPorcent((data.profit.map(e => e.porcentage).reduce((a,b) => (a+b))) * parseInt(investor.capitalAmount) / 100)
+        setSendProfitPorcent((data.profit.map(e => e.checkinSend ? e.porcentage:0).reduce((a,b) => (a+b))) * parseInt(clients.capitalAmount) / 100)
+        setTotalProfitPorcent((data.profit.map(e => e.porcentage).reduce((a,b) => (a+b))) * parseInt(clients.capitalAmount) / 100)
       })
       .catch(function (error) {
         if (error.response) {
@@ -79,7 +81,9 @@ const Package = () => {
     };
     fetchData();
 
-  },[accessTokenObj, params.investorId, investor])
+    console.log(clients);
+
+  },[accessTokenObj, params.clientsId, clients])
   
   return (
     <div className="package">
@@ -94,39 +98,39 @@ const Package = () => {
             <div className="item">
               <div className="detailItem">
                   <span className="itemKey">Full Name:</span>
-                  <span className="itemValue">{investor.fullName}</span>
+                  <span className="itemValue">{clients.clientName}</span>
                 </div>
                 <div className="detailItem">
                   <span className="itemKey">Telegram:</span>
-                  <span className="itemValue">{investor.telegram}</span>
+                  <span className="itemValue">{clients.appId}</span>
                 </div>
                 <div className="detailItem">
                   <span className="itemKey">Binance Email:</span>
-                  <span className="itemValue">{investor.binanceEmail}</span>
+                  <span className="itemValue">{clients.phone}</span>
                 </div>
                 <div className="detailItem">
                   <span className="itemKey">Binance Hash:</span>
-                  <span className="itemValue">{investor.binanceHash}</span>
+                  <span className="itemValue">{clients.region}</span>
                 </div>
                 <div className="detailItem">
                   <span className="itemKey">Capital Amount:</span>
-                  <span className="itemValue">${investor.capitalAmount}</span>
+                  <span className="itemValue">{clients.prices}</span>
                 </div>
                 <div className="detailItem">
                   <span className="itemKey">Payment Method:</span>
-                  <span className="itemValue">{myPackage.PaymentMethod}</span>
+                  <span className="itemValue">{clients.oldCredit}</span>
                 </div>
                 <div className="detailItem">
                   <span className="itemKey">Start Date:</span>
-                  <span className="itemValue">{myPackage.startDate}</span>
+                  <span className="itemValue">{clients.isCredit}</span>
                 </div>
                 <div className="detailItem">
                   <span className="itemKey">Sended Profit:</span>
-                  <span className="itemValue">${sendProfitPorcent}</span>
+                  <span className="itemValue">{clients.isFrigo}</span>
                 </div>
                 <div className="detailItem">
                   <span className="itemKey">Total Profit:</span>
-                  <span className="itemValue">${totalProfitPorcent}</span>
+                  <span className="itemValue">{clients.isPromo}</span>
                 </div>
                 <div className="detailItem">
                   <span className="itemKey">Investment Year:</span>

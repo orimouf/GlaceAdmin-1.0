@@ -1,0 +1,24 @@
+.loadingContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    width: -webkit-fill-available;
+    height: -webkit-fill-available;
+    position: absolute;
+    background: #00000087;
+    margin-top: -20px;
+    margin-left: -20px;
+
+    .icnSpinner {
+        animation: spin-animation 1s infinite;
+        display: inline-block;
+        color: white;
+        font-size: 3em;
+      }
+      
+    @keyframes spin-animation {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(-359deg); }
+    }
+}
