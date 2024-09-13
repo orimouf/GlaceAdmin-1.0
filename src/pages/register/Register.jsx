@@ -76,7 +76,7 @@ const Register = () => {
         let array = []
         let id = 0
         
-        data.arr.forEach((receive, i) => {
+        data.arr.map((receive, i) => {
 
           array.push(
             {
@@ -120,7 +120,7 @@ const Register = () => {
         let array = []
         id = id + 1
         
-        data.payments.forEach((receive) => {
+        data.payments.map((receive) => {
           
             array.push(
               {
@@ -158,7 +158,7 @@ const Register = () => {
     function profitCalcul(searchArray) {
       var totalProfit = 0;
 
-      searchArray.forEach( order => {
+      searchArray.map( order => {
         if (order.isCredit !== "Payment") {
           const arrayOfPrices = order.clientPrices.split(":");
 
@@ -219,7 +219,7 @@ const Register = () => {
       
       var dateArray = []
       var allDailyArray = []
-      arrayData.forEach(ar => {
+      arrayData.map(ar => {
         let checkDate = dateArray.find(ele => (ele.date === ar.date && ele.camion === ar.camion) ? true : false)
         if (!checkDate) {dateArray.push({
           camion: ar.camion,
@@ -227,7 +227,7 @@ const Register = () => {
         })}
       })
 
-      dateArray.forEach((eleDate, i) => {
+      dateArray.map((eleDate, i) => {
         let totalPayment = 0
         let totalCredit = 0
         let totalCapital = 0
@@ -241,6 +241,8 @@ const Register = () => {
             }
             
             return ele
+          } else {
+            return null;
           }
         })
         const totalProfit = profitCalcul(dailyData)
@@ -274,7 +276,7 @@ const Register = () => {
     searchRef_.addEventListener('click', handleClick)
     
     if (arrayData.length === 0) {
-      fetchData('10-08-2024*20-08-2024')
+      fetchData('10-05-2024*15-05-2024')
     }
 
   }, [accessTokenObj, arrayData, search, arrayData.length, dailyData])

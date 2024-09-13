@@ -89,9 +89,10 @@ const Order = ({ title , type}) => {
         })
       .then(res => {
         const data = res.data
+        
         let array = []
         let id = 0
-        data.orders.forEach((receive, i) => {
+        data.orders.map((receive, i) => {
           array.push(
           {
             id: i+1,
@@ -136,7 +137,7 @@ const Order = ({ title , type}) => {
         if (arrayDataOrders.length === 0) handleClickVariant(`No Orders with ${value}.`, 'info')
         if (data.payments.length === 0) handleClickVariant(`No Payment with ${value}.`, 'info')
 
-        data.payments.forEach((receive) => {
+        data.payments.map((receive) => {
           array.push(
           {
             id: i,
@@ -183,7 +184,7 @@ const Order = ({ title , type}) => {
     function profitCalcul(searchArray) {
       var totalProfit = 0;
 
-      searchArray.forEach( order => {
+      searchArray.map( order => {
         if (order.isCredit !== "Payment") {
           const arrayOfPrices = order.clientPrices.split(":");
 
@@ -325,7 +326,7 @@ const Order = ({ title , type}) => {
   const selectedAction = event => {
 
     var dataSelected = apiRef.current.getSelectedRows()
-    dataSelected.forEach(deleteSelected)
+    dataSelected.map(deleteSelected)
   }
 
   const apiDeleteFun = async (root, id) => {
