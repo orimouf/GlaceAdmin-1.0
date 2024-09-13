@@ -2,9 +2,6 @@ import React from 'react'
 import "./daily.scss"
 import Sidebar from "../../components/sidebar/Sidebar"
 import Navbar from "../../components/navbar/Navbar"
-// import Chart from "../../components/chart/Chart"
-// import List from "../../components/table/Table"
-// import Featured from '../../components/featured/featured'
 import axios from 'axios'
 import { dailyColumns } from "../../datatablesource"
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid'
@@ -16,7 +13,7 @@ import { TopPopUpMsg } from "../../components/popupmsg/js/topmsg"
 
 const Daily = () => {
   const apiRef = useGridApiRef()
-  const searchRef = useRef(null)
+  // const searchRef = useRef(null)
   const typeSearchRef = useRef(null)
   const accessTokenObj = JSON.parse(localStorage.getItem('user')).accessToken
   const [ arrayOrderData, setArrayOrderData ] = useState([])
@@ -69,12 +66,6 @@ const Daily = () => {
   
     const typeValue = event => {
       setTypeSearche(event.target.value)
-    }
-
-    const handleClick = event => {
-      const searchInput = document.getElementById('search-input')
-      const inputValue = searchInput.value
-      searchFun(inputValue, typeSearch)
     }
 
     const fetchClient = async () => {

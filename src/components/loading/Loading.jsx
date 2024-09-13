@@ -1,4 +1,5 @@
 import './loading.scss'
+import React from 'react';
 import SyncIcon from '@mui/icons-material/Sync';
 
 const Loading = ({ status, page }) => {

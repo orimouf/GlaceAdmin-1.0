@@ -16,10 +16,7 @@ import Goback from "../../components/goback/Goback"
 const Package = () => {
   const params = useParams();
   const accessTokenObj = JSON.parse(localStorage.getItem('user')).accessToken  
-  const [ sendProfitPorcent, setSendProfitPorcent ] = useState(0)
-  const [ totalProfitPorcent, setTotalProfitPorcent ] = useState(0)
   const [ arrayData, setArrayData ] = useState([])
-  const [ myPackage, setMyPackage ] = useState([])
   const [ clients, setClients ] = useState({})
   
   useEffect(function () {
@@ -70,8 +67,6 @@ const Package = () => {
               
         ))
         setArrayData(array)
-        setSendProfitPorcent((data.profit.map(e => e.checkinSend ? e.porcentage:0).reduce((a,b) => (a+b))) * parseInt(clients.capitalAmount) / 100)
-        setTotalProfitPorcent((data.profit.map(e => e.porcentage).reduce((a,b) => (a+b))) * parseInt(clients.capitalAmount) / 100)
       })
       .catch(function (error) {
         if (error.response) {
@@ -131,10 +126,6 @@ const Package = () => {
                 <div className="detailItem">
                   <span className="itemKey">Total Profit:</span>
                   <span className="itemValue">{clients.isPromo}</span>
-                </div>
-                <div className="detailItem">
-                  <span className="itemKey">Investment Year:</span>
-                  <span className="itemValue">{myPackage.currentYear}</span>
                 </div>
             </div>
           </div>

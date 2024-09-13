@@ -5,44 +5,44 @@ import { Link } from 'react-router-dom';
 // Purchase Prices
 export const purchasePrices = {
     bac_5_q_u: 700,
-    bac_6_q_u: 900,
-    bf_150_q_u: 110,
-    bf_200_q_u: 150, // old price
-    bf_210_q_u: 175, // old price
-    bf_230_q_u: 200, // old price
-    bf_250_q_u: 210,
-    bf_300_q_u: 260, // old price
+    bac_6_q_u: 800, // lamin price
+    bf_150_q_u: 105, // lamin price
+    bf_200_q_u: 120, // lamin price
+    bf_210_q_u: 150, // lamin price
+    bf_230_q_u: 160, // lamin price
+    bf_250_q_u: 210, // lamin price
+    bf_300_q_u: 210, // lamin price
     bf_330_q_u: 280, // old price
-    bf_400_q_u: 300, // old price
-    big_q_u: 28,
+    bf_400_q_u: 210,
+    big_q_u: 30, // lamin price
     bingo_premium_q_u: 240, // old price
     bingo_prm_q_u: 40, // old price
     bloom_prm_q_u: 35, // old price
     buch_q_u: 405, // old price
-    cornito_4_q_u: 40.5,
-    cornito_5_q_u: 40.5,
-    cornito_g_q_u: 61, // old price
+    cornito_4_q_u: 40.5, // lamin price
+    cornito_5_q_u: 40.5, // lamin price
+    cornito_g_q_u: 61, // lamin price
     cornito_prm_q_u: 45, // old price
-    g8_q_u: 38,
-    gini_q_u: 37, // old price
-    gofrito_q_u: 26, // old price
-    gold_q_u: 40.5,
-    juliana_q_u: 69,
-    mini_prm_q_u: 28, // old price
-    mini_q_u: 22.5,
-    mini_scobido_q_u: 18,
-    misso_q_u: 43,
-    mosta_q_u: 52,
-    pot_prm_q_u: 28, // old price
-    pot_q_u: 22.5,
+    g8_q_u: 38, // gelato price
+    gini_q_u: 37, // lamin price
+    gofrito_q_u: 26, // lamin price
+    gold_q_u: 40.5, // lamin price
+    juliana_q_u: 69, // gelato price
+    mini_prm_q_u: 22.5, // lamin price
+    mini_q_u: 22.5, // lamin price
+    mini_scobido_q_u: 18, // gelato price
+    misso_q_u: 43, // lamin price
+    mosta_q_u: 52, // lamin price
+    pot_prm_q_u: 28, // lamin price
+    pot_q_u: 22.5, // lamin price
     pot_v_q_u: 28, // old price
-    scobido_q_u: 25,
+    scobido_q_u: 25, // gelato price
     selection_q_u: 260, // old price
-    skiper_q_u: 54, // old price
-    solo_q_u: 21,
-    tarte_q_u: 405, // old price
-    trio_q_u: 23, // old price
-    venezia_q_u: 28 // old price
+    skiper_q_u: 54, // lamin price
+    solo_q_u: 21, // gelato price
+    tarte_q_u: 400, // lamin price
+    trio_q_u: 22.5, // lamin price
+    venezia_q_u: 22.5 // lamin price
 }
 
 //temporary data
@@ -136,6 +136,18 @@ export const registerColumns = [
     { field: "dailyProfit", headerName: "Daily Profit", width: 120 },
     { field: "dailyWorkers", headerName: "Daily Workers", width: 150},
     { field: "dailyFees", headerName: "Daily Fees", width: 300}
+]
+
+export const CreditListColumns = [
+    { field: "id", headerName: "ID", width: 60},
+    { field: "clientName", headerName: "Client Name", width: 180},
+    { field: "_id", headerName: "Client ID", width: 140},
+    { field: "camion", headerName: "Camion", width: 120},
+    { field: "allCapital", headerName: "All Capital", width: 120},
+    { field: "allPayment", headerName: "All Payment", width: 120 },
+    { field: "allCredit", headerName: "All Credit", width: 120},
+    { field: "numberOrder", headerName: "N° Order", width: 100 },
+    { field: "numberPayment", headerName: "N° Payment", width: 100}
 ]
 
 export const orderColumns = [

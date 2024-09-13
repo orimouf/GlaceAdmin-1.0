@@ -1,8 +1,8 @@
-.register {
+.creditList {
     display: flex;
     width: 100%;
 
-    .registerContainer {
+    .creditListContainer {
         flex: 6;
 
         .top {
@@ -23,11 +23,6 @@
                     font-weight: 500;
                 }         
                 
-                .typeCamion {
-                    border-right: 1px solid #abadb1;
-                    padding-right: 40px;
-                }
-                
                 .typeLable, .typeInput {
                     display: flex;
                     gap: 20px;
@@ -40,47 +35,35 @@
                 gap: 10px;
                 flex: 0;
 
-                .searchForm {
+                .days {
                     display: flex;
                     align-items: center;
-                    justify-content: space-between;
-                    gap: 15px;
+                    border: 0.5px solid lightgray;
+                    padding: 3px;
         
-                    .search {
-                        display: flex;
-                        align-items: center;
-                        border: 0.5px solid lightgray;
-                        padding: 3px;
-            
-                        input {
-                            border: none;
-                            outline: none;
-                            background-color: transparent;
-                        }
-            
-                        input::placeholder {font-size: 12px;}
+                    input {
+                        width: 6em;
+                        border: none;
+                        outline: none;
+                        background-color: transparent;
                     }
+        
+                    input::placeholder {font-size: 12px;}
+                }
 
-                    .searchBtn {
-                        display: flex;
-                        align-items: center;
-                        border: 0.5px solid #008000;
-                        padding: 3px 10px;
-                        font-size: 18px;
-                        gap: 5px;
-                        background: #d8ecd8;
-                        color: #008000;
-                        cursor: pointer;
-
-                        b {
-                            font-size: 16px;
-                        }
-
-                        &:hover {
-                            background: #008000;
-                            color: #ffffff;
-                        }
+                .search {
+                    display: flex;
+                    align-items: center;
+                    border: 0.5px solid lightgray;
+                    padding: 3px;
+        
+                    input {
+                        border: none;
+                        outline: none;
+                        background-color: transparent;
                     }
+        
+                    input::placeholder {font-size: 12px;}
                 }
 
             }
@@ -220,8 +203,7 @@
         }
 
         .dataTable {
-            min-height: 100vh;
-            // height: 100%;
+            height: 100%;
             padding: 20px;
         }
         

@@ -2,39 +2,32 @@ import React from 'react'
 import "./order.scss"
 import Sidebar from "../../components/sidebar/Sidebar"
 import Navbar from "../../components/navbar/Navbar"
-// import Chart from "../../components/chart/Chart"
-// import List from "../../components/table/Table"
-// import Featured from '../../components/featured/featured'
 import axios from 'axios'
 import { orderColumns, purchasePrices } from "../../datatablesource"
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid'
 import { useState, useEffect, useRef } from "react"
 import Goback from "../../components/goback/Goback"
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
-import SyncIcon from '@mui/icons-material/Sync'
-import { TopPopUpMsg } from "../../components/popupmsg/js/topmsg"
 import View from '../../components/view/View'
 import Loading from '../../components/loading/Loading'
 import ConfirmDialog from '../../components/dialog/confirmDialog/confirmDialog'
 import { useSnackbar } from 'notistack'
 import EditDialog from '../../components/dialog/editDialog/EditDialog'
 import { getDate } from '../../function/dateForma'
+import TypeSearch from '../../components/typesearch/TypeSearch'
 
-
-
-const Order = () => {
+const Order = ({ title , type}) => {
   const apiRef = useGridApiRef()
   const searchRef = useRef(null)
-  const typeSearchRef = useRef(null)
   const camionRef = useRef(null)
   const accessTokenObj = JSON.parse(localStorage.getItem('user')).accessToken
   const [ arrayData, setArrayData ] = useState([])
   const [ search, setSearch ] = useState([])
-  const [ typeSearch, setTypeSearche ] = useState("date")
   const [ camion, setCamion ] = useState("CAMION 01")
   const [ viewSection, setViewSection ] = useState(null)
   const [ loadingStatus, setLoadingStatus ] = useState(true)
+  const [ isNew, setIsNew ] = useState(true)
   const { enqueueSnackbar } = useSnackbar();
+  var typeSearch = type
 
   const handleClickVariant = (msg ,variant) => {
     // variant could be success, error, warning, info, or default
@@ -43,168 +36,146 @@ const Order = () => {
 
   useEffect(function () {
 
-    function searchFun(string, type) {
+    function searchFun(searchData) {
+      
       document.getElementById('totalPaymentShow').innerHTML = "0 DA";
       document.getElementById('totalCreditShow').innerHTML = "0 DA";
       document.getElementById('totalCapitalShow').innerHTML = "0 DA";
       document.getElementById('totalProfitShow').innerHTML = "0 DA";
 
-      var camionArray = arrayData.filter((e) => e.camion === camion)
-      
-      var searchArray = camionArray.filter((e) => {
-        switch(type) {
-          case 'appId':
-            return e.appId === string;
-          case 'clientName':
-            return e.clientName === string;
-          case 'clientId':
-            return e.clientId === string;
-          case 'date':
-            return e.date === string;
-          case 'productListId':
-            return e.productListId === string;
-          case 'credit':
-            return e.isCredit === string; 
-          case 'check':
-            return e.isCheck === string;
-          default:
-            return '';
-        }
-      })
-
       let totalPayment = 0
       let totalCredit = 0
       let totalCapital = 0
-      searchArray.filter((e) => {
+      let totalVerssement = 0
+
+      searchData.filter((e) => {
         if (e.verssi !== 0){ totalPayment += parseFloat(e.verssi) }
+        if (e.isCredit === "Payment"){ totalVerssement += parseFloat(e.verssi) }
         if (e.rest !== 0 && e.isCredit !== "Payment"){ totalCredit += parseFloat(e.rest) }
-        totalCapital += parseFloat(e.totalToPay)
+        if (e.isCredit !== "Payment"){ totalCapital += parseFloat(e.totalToPay) }
+        
         return e
       })
-      
-      setSearch(searchArray)
-      const totalProfit = profitCalcul(searchArray)
+            
+      setSearch(searchData)
+
+      const totalProfit = profitCalcul(searchData)
 
       document.getElementById('totalPaymentShow').innerHTML = totalPayment + ".00 DA";
-      document.getElementById('totalCreditShow').innerHTML = totalCredit + ".00 DA";
+      document.getElementById('totalCreditShow').innerHTML = (totalCredit - totalVerssement) + ".00 DA";
       document.getElementById('totalCapitalShow').innerHTML = totalCapital + ".00 DA";
       document.getElementById('totalProfitShow').innerHTML = totalProfit + ".00 DA";
       setLoadingStatus(false)
     }
   
-    const typeValue = event => {
-      if (event.target.value === "date") {
-        document.getElementById('date-input').style.display = "block"
-        document.getElementById('search-input').style.display = "none"
-      } else {
-        document.getElementById('date-input').style.display = "none"
-        document.getElementById('search-input').style.display = "block"
-      }
-      setTypeSearche(event.target.value)
-    }
-
     const camionValue = event => {
       setCamion(event.target.value)
+      var camionArray = arrayData.filter((e) => e.camion === event.target.value)
+
+      searchFun(camionArray)
     }
 
-    const handleClick = event => {
+    const handleClickSearch = event => {
       setLoadingStatus(true)
       var searchInput = document.getElementById('search-input')
-      if (typeSearch === "date") {
-        searchInput = document.getElementById('date-input')
-      }
       
       const inputValue = searchInput.value.split('-').reverse().join('-')
-      searchFun(inputValue, typeSearch)
+      fetchData(typeSearch, inputValue)
     }
 
-    const fetchData = async (date) => {
-      await axios.get(`../orders/ordresJoin/${date}`, {
-        headers: { token: `Bearer ${accessTokenObj}` }
-      })
+    const fetchData = async (type, value) => {
+      await axios.get(`/orders/ordresJoin/${type}/${value}`, {
+          headers: { token: `Bearer ${accessTokenObj}` }
+        })
       .then(res => {
         const data = res.data
         let array = []
         let id = 0
-        data.orders.map((receive, i) => {
-
+        data.orders.forEach((receive, i) => {
           array.push(
-            {
-              id: i+1,
-              _id: receive._id,
-              appId: receive.appId,
-              clientName: receive.clientName,
-              clientId: receive.clientId,
-              productListId: receive.productListId,
-              totalToPay: receive.totalToPay,
-              verssi: receive.verssi,
-              rest: receive.rest,
-              date: receive.date,
-              camion: receive.camion,
-              profit: 0,
-              productsOrdered: receive.productsOrdered[0],
-              clientPrices: receive.clientPrices,
-              isCredit: (receive.isCredit) ? "Credit" : "Non Credit",
-              isCheck: (receive.isCheck) ? "Check" : "Non Check"
-            }
-          )
-          id = i
-          setArrayData(array)
-          setSearch(array)
-          setLoadingStatus(false)
-          
-        }).then(fetchPaymentsData(id, array))
-        
+          {
+            id: i+1,
+            _id: receive._id,
+            appId: receive.appId,
+            clientName: receive.clientName,
+            clientId: receive.clientId,
+            productListId: receive.productListId,
+            totalToPay: receive.totalToPay,
+            verssi: receive.verssi,
+            rest: receive.rest,
+            date: receive.date,
+            camion: receive.camion,
+            profit: 0,
+            productsOrdered: receive.productsOrdered[0],
+            clientPrices: receive.clientPrices,
+            isCredit: (receive.isCredit) ? "Credit" : "Non Credit",
+            isCheck: (receive.isCheck) ? "Check" : "Non Check"
+          })
+          id = i + 1
+        }).then(fetchPaymentsData(id, array, type, value))        
       })
       .catch(function (error) {
         if (error.response) {
+          handleClickVariant(`ERROR ${error.response.statusText} -- ${error.response.status}.`, 'error')
           console.log(error.response);
+          setLoadingStatus(false)
         }
       });
     }
 
-    const fetchPaymentsData = async (id, arrayDataOrders) => {
-      await axios.get(`../payments/`, {
+    const fetchPaymentsData = async (id, arrayDataOrders, type, value) => {
+      await axios.get(`/payments/${type}/${value}`, {
         headers: { token: `Bearer ${accessTokenObj}` }
       })
       .then(res => {
         const data = res.data
         let array = []
         let i = id + 1
-        
-        data.payments.map((receive) => {
+        var camionArray = []
 
+        if (arrayDataOrders.length === 0) handleClickVariant(`No Orders with ${value}.`, 'info')
+        if (data.payments.length === 0) handleClickVariant(`No Payment with ${value}.`, 'info')
+
+        data.payments.forEach((receive) => {
           array.push(
-            {
-              id: i,
-              _id: receive._id,
-              appId: receive.appId,
-              clientName: receive.clientName,
-              clientId: receive.clientId,
-              region: receive.region,
-              totalToPay: receive.oldSomme,
-              verssi: receive.verssi,
-              rest: receive.rest,
-              date: receive.date,
-              camion: receive.camion,
-              profit: 0,
-              productsOrdered: {},
-              clientPrices: "",
-              isCredit: "Payment",
-              isCheck: (receive.isCheck) ? "Check" : "Non Check"
-            }
-          )
-          i++
+          {
+            id: i,
+            _id: receive._id,
+            appId: receive.appId,
+            clientName: receive.clientName,
+            clientId: receive.clientId,
+            region: receive.region,
+            totalToPay: receive.oldSomme,
+            verssi: receive.verssi,
+            rest: receive.rest,
+            date: receive.date,
+            camion: receive.camion,
+            profit: 0,
+            productsOrdered: {},
+            clientPrices: "",
+            isCredit: "Payment",
+            isCheck: (receive.isCheck) ? "Check" : "Non Check"
+          }
+        );
+        i++;
+      })
+      const newArrayData = arrayDataOrders.concat(array)
 
-          setArrayData(arrayDataOrders.concat(array))
-          setSearch(arrayDataOrders.concat(array))
-          setLoadingStatus(false)
-        })
+      if (type === "date") {
+        camionArray = newArrayData.filter((e) => e.camion === camion)
+      } else {
+        camionArray = newArrayData
+      }
+
+      setArrayData(newArrayData);
+      searchFun(camionArray);
         
       })
       .catch(function (error) {
         if (error.response) {
+          handleClickVariant(`ERROR ${error.response.statusText} -- ${error.response.status}.`, 'error')
           console.log(error.response);
+          setLoadingStatus(false)
         }
       });
     }
@@ -212,7 +183,7 @@ const Order = () => {
     function profitCalcul(searchArray) {
       var totalProfit = 0;
 
-      searchArray.map( order => {
+      searchArray.forEach( order => {
         if (order.isCredit !== "Payment") {
           const arrayOfPrices = order.clientPrices.split(":");
 
@@ -266,41 +237,82 @@ const Order = () => {
         }
         
       })
+
       return totalProfit
     }
 
     const searchRef_ = searchRef.current
-    const typeSearchRef_ = typeSearchRef.current
     const camionRef_ = camionRef.current
-    searchRef_.addEventListener('click', handleClick)
-    typeSearchRef_.addEventListener('change', typeValue)
+    searchRef_.addEventListener('click', handleClickSearch)
     camionRef_.addEventListener('change', camionValue)
     
-    if (arrayData.length === 0) {
+    if (loadingStatus && isNew) {
       const currentDate = getDate()
-      fetchData(currentDate)
+      var valueSearch = currentDate
+      if (typeSearch !== "date") valueSearch = "medjdi hebchi"
+      setIsNew(false)
+      
+      fetchData(typeSearch, valueSearch)
     }
     
-  }, [accessTokenObj, arrayData, search, typeSearch, arrayData.length])
-
+  }, [accessTokenObj, camion, typeSearch])
   
   function viewSelected(item) {    
     document.getElementsByClassName("midel")[0].style.display = "flex";
     setViewSection(<View orderDetail={item} />)
   }
 
-  function editSelected(item) {
-    console.log(item);
-    // const responce = apiDeleteFun("clients", item._id)
-    // if (responce) {
-    //   document.getElementsByClassName("textLogin")[0].innerHTML = "Edit Selected"
-    //   document.getElementsByClassName("icnSpinner")[0].style = "display: none; margin: auto;"
-    // }
+  const editSelected = async (item, typeEdit) => {
+    const root = (typeEdit !== "Payment") ? "orders" : "payments"
+    await axios.put(`/${root}/${item._id}`, item, {
+      headers: { token: `Bearer ${accessTokenObj}` }
+    })
+    .then(res => {
+      if (res.status === 200) {
+        // popup msg delete success with snackbar
+        handleClickVariant(` ${item.clientName}  --  Edited successfully.`, 'success')
+        const newArray = search.map((elem) => {
+          if (typeEdit !== "Payment") {
+            if (elem._id === res.data._id) {             
+              elem.clientName = res.data.clientName
+              elem.clientId = res.data.clientId
+              elem.totalToPay = res.data.totalToPay
+              elem.verssi = res.data.verssi
+              elem.rest = res.data.rest
+              elem.date = res.data.date
+              elem.camion = res.data.camion
+              elem.isCheck = (res.data.isCheck) ? "Check" : "Non Check"
+              elem.isCredit = (res.data.isCredit) ? "Credit" : "Non Credit"
+            }
+          } else {
+            if (elem._id === res.data._id) {             
+              elem.clientName = res.data.clientName
+              elem.clientId = res.data.clientId
+              elem.totalToPay = res.data.oldSomme
+              elem.verssi = res.data.verssi
+              elem.rest = res.data.rest
+              elem.date = res.data.date
+              elem.camion = res.data.camion
+              elem.isCheck = (res.data.isCheck) ? "Check" : "Non Check"
+            }
+          }
+          
+          return elem
+        })
+        setSearch(newArray)
+      }
+    })
+    .catch(error => {
+      // popup msg Error to delete with snackbar
+      handleClickVariant(`Error !! ${error}.`, 'error')
+      console.error(error);
+    });
   }
 
   function deleteSelected(item) {
-    const responceOrder = apiDeleteFun("orders", item._id)
-    if (responceOrder) {
+    const root = (item.isCredit !== "Payment") ? "orders" : "payments"
+    const responceOrder = apiDeleteFun(root, item._id)
+    if (responceOrder && root !== "payments") {
       const responceProductList = apiDeleteFun("allproducts", item.productListId)
       if (responceProductList) {
         setArrayData([])
@@ -313,12 +325,11 @@ const Order = () => {
   const selectedAction = event => {
 
     var dataSelected = apiRef.current.getSelectedRows()
-    console.log(dataSelected);
-    dataSelected.forEach(deleteSelected) 
+    dataSelected.forEach(deleteSelected)
   }
 
   const apiDeleteFun = async (root, id) => {
-    await axios.delete(`../${root}/${id}`, {
+    await axios.delete(`/${root}/${id}`, {
       headers: { token: `Bearer ${accessTokenObj}` }
     })
     .then(response => {
@@ -356,31 +367,9 @@ const Order = () => {
         <div className='mainContainer'>
           <Loading status={loadingStatus} page={"setProduct"} />
           <Goback title="Orders" btn={<div></div>}/>
-          <div className="top">
-            <div className="left">
-              <div className='typeLable'>
-                <label htmlFor="type">Type Of Search : </label>
-              </div>
-              <div className='typeInput typeCamion' ref={camionRef}>
-                <input type="radio" name="camion" value="CAMION 01" defaultChecked/> CAMION 01
-                <input type="radio" name="camion" value="CAMION 02" /> CAMION 02
-              </div>
-              <div className='typeInput' ref={typeSearchRef}>
-                <input type="radio" name="typeSearch" value="clientName" /> Client Name
-                <input type="radio" name="typeSearch" value="productListId" /> Product List ID 
-                <input type="radio" name="typeSearch" value="date" defaultChecked/> Date 
-                <input type="radio" name="typeSearch" value="credit" /> Credit 
-                <input type="radio" name="typeSearch" value="check" /> Check 
-              </div>
-            </div>
-            <div className="right">
-              <div className="search">
-                <input type="date" id="date-input" />
-                <input id='search-input' type="text" placeholder='Search...' style={{display:"none"}} />
-                <SearchOutlinedIcon ref={searchRef} id="search-button" />
-              </div>
-            </div>
-          </div>
+          
+          <TypeSearch type={typeSearch} camionRef={camionRef} searchRef={searchRef} />
+
           <div className="midel">
             {viewSection}
           </div>

@@ -6,6 +6,9 @@
     justify-content: space-around;
 
     .formLeft {
+        .flexSB {
+            justify-content: space-between;
+        }
 
         .formInput {
             display: flex;
@@ -20,6 +23,10 @@
                 border-bottom: 2px solid green;
                 padding-bottom: 5px;
                 margin-top: 5px;
+            }
+
+            .lh2 {
+                line-height: 2;
             }
 
             label {

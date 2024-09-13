@@ -10,6 +10,7 @@ import { registerColumns, purchasePrices } from "../../datatablesource"
 import { DataGrid, useGridApiRef } from '@mui/x-data-grid'
 import { useState, useEffect, useRef } from "react"
 import Goback from "../../components/goback/Goback"
+import Loading from '../../components/loading/Loading'
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined'
 import SyncIcon from '@mui/icons-material/Sync'
 import { TopPopUpMsg } from "../../components/popupmsg/js/topmsg"
@@ -20,61 +21,62 @@ const Register = () => {
   const searchRef = useRef(null)
   const typeSearchRef = useRef(null)
   const accessTokenObj = JSON.parse(localStorage.getItem('user')).accessToken
+  const [ loadingStatus, setLoadingStatus ] = useState(true)
   const [ arrayData, setArrayData ] = useState([])
   const [ search, setSearch ] = useState([])
-  const [ typeSearch, setTypeSearche ] = useState("")
   const [ viewSection, setViewSection ] = useState(null)
   const [ dailyData, setDailyData ] = useState([])
 
   useEffect(function () {
 
-    function searchFun(date, days, type) {
+    function searchFun(searchArray) {
+      
       document.getElementById('totalPaymentShow').innerHTML = "0 DA";
       document.getElementById('totalCreditShow').innerHTML = "0 DA";
       document.getElementById('totalCapitalShow').innerHTML = "0 DA";
       document.getElementById('totalProfitShow').innerHTML = "0 DA";
-      
-      var searchArray = dailyData.filter((e) => {
-        
-      })
 
       let totalPayment = 0
       let totalCredit = 0
       let totalCapital = 0
+      let totalProfit = 0
+
       searchArray.filter((e) => {
-        if (e.verssi !== 0){ totalPayment += parseFloat(e.verssi) }
-        if (e.rest !== 0){ totalCredit += parseFloat(e.rest) }
-        totalCapital += parseFloat(e.totalToPay)
+        totalPayment += parseFloat(e.dailyPayment)
+        totalCredit += parseFloat(e.dailyCredit)
+        totalCapital += parseFloat(e.dailyCapital)
+        totalProfit += parseFloat(e.dailyProfit)
         return e
       })
-      
-      setSearch(searchArray)
-      const totalProfit = profitCalcul(searchArray)
 
       document.getElementById('totalPaymentShow').innerHTML = totalPayment + ".00 DA";
       document.getElementById('totalCreditShow').innerHTML = totalCredit + ".00 DA";
       document.getElementById('totalCapitalShow').innerHTML = totalCapital + ".00 DA";
       document.getElementById('totalProfitShow').innerHTML = totalProfit + ".00 DA";
+
+      setLoadingStatus(false)
     }
 
     const handleClick = event => {
-      var searchInput = document.getElementById('search-input')
-      var daysInput = document.getElementById('days-input')
+      setLoadingStatus(true)
+      var searchInputOne = document.getElementById('date-input-one')
+      var searchInputTwo = document.getElementById('date-input-two')
       
-      const searchInputValue = searchInput.value.split('-').reverse().join('-')
-      const daysInputValue = daysInput.value
-      searchFun(searchInputValue, daysInputValue, typeSearch)
+      const searchDateOne = searchInputOne.value.split('-').reverse().join('-')
+      const searchDateTwo = searchInputTwo.value.split('-').reverse().join('-')
+      fetchData(`${searchDateOne}*${searchDateTwo}`)
     }
 
-    const fetchData = async () => {
-      await axios.get(`../orders/ordresJoin/`, {
+    const fetchData = async (date) => {
+      await axios.get(`../orders/ordresJoin/all/${date}`, {
         headers: { token: `Bearer ${accessTokenObj}` }
       })
       .then(res => {
         const data = res.data
         let array = []
         let id = 0
-        data.orders.map((receive, i) => {
+        
+        data.arr.forEach((receive, i) => {
 
           array.push(
             {
@@ -97,9 +99,9 @@ const Register = () => {
             }
           )
           id = i
-          setArrayData(array)
-          
-        }).then(fetchPaymentsData(id, array))
+          setArrayData(array)   
+                 
+        }).then(fetchPaymentsData(id, array, date))
         
       })
       .catch(function (error) {
@@ -109,8 +111,8 @@ const Register = () => {
       });
     }
 
-    const fetchPaymentsData = async (id, arrayDataOrders) => {
-      await axios.get(`../payments/`, {
+    const fetchPaymentsData = async (id, arrayDataOrders, date) => {
+      await axios.get(`../payments/date/${date}`, {
         headers: { token: `Bearer ${accessTokenObj}` }
       })
       .then(res => {
@@ -118,29 +120,31 @@ const Register = () => {
         let array = []
         id = id + 1
         
-        data.payments.map((receive) => {
+        data.payments.forEach((receive) => {
+          
+            array.push(
+              {
+                id: id+1,
+                _id: receive._id,
+                appId: receive.appId,
+                clientName: receive.clientName,
+                clientId: receive.clientId,
+                region: receive.region,
+                totalToPay: receive.oldSomme,
+                verssi: receive.verssi,
+                rest: receive.rest,
+                date: receive.date,
+                camion: receive.camion,
+                profit: 0,
+                productsOrdered: {},
+                clientPrices: "",
+                isCredit: "Payment",
+                isCheck: (receive.isCheck) ? "Check" : "Non Check"
+              }
+            )
 
-          array.push(
-            {
-              id: id+1,
-              _id: receive._id,
-              appId: receive.appId,
-              clientName: receive.clientName,
-              clientId: receive.clientId,
-              region: receive.region,
-              totalToPay: receive.oldSomme,
-              verssi: receive.verssi,
-              rest: receive.rest,
-              date: receive.date,
-              camion: receive.camion,
-              profit: 0,
-              productsOrdered: {},
-              clientPrices: "",
-              isCredit: "Payment",
-              isCheck: (receive.isCheck) ? "Check" : "Non Check"
-            }
-          )
-          setArrayData(arrayDataOrders.concat(array))          
+          setArrayData(arrayDataOrders.concat(array))
+          
         }).then(dailyDataFun(arrayDataOrders.concat(array)))
         
       })
@@ -154,7 +158,7 @@ const Register = () => {
     function profitCalcul(searchArray) {
       var totalProfit = 0;
 
-      searchArray.map( order => {
+      searchArray.forEach( order => {
         if (order.isCredit !== "Payment") {
           const arrayOfPrices = order.clientPrices.split(":");
 
@@ -212,9 +216,10 @@ const Register = () => {
     }
 
     function dailyDataFun (arrayData) {
+      
       var dateArray = []
       var allDailyArray = []
-      arrayData.map(ar => {
+      arrayData.forEach(ar => {
         let checkDate = dateArray.find(ele => (ele.date === ar.date && ele.camion === ar.camion) ? true : false)
         if (!checkDate) {dateArray.push({
           camion: ar.camion,
@@ -222,7 +227,7 @@ const Register = () => {
         })}
       })
 
-      dateArray.map((eleDate, i) => {
+      dateArray.forEach((eleDate, i) => {
         let totalPayment = 0
         let totalCredit = 0
         let totalCapital = 0
@@ -258,18 +263,21 @@ const Register = () => {
       // sorting allDailyArray by date in reversing date from 01-01-2024 to 2024-01-01 
       allDailyArray.sort((a,b)=> Date.parse(a.date.split('-').reverse().join('-')) - Date.parse(b.date.split('-').reverse().join('-')));
 
+      searchFun(allDailyArray)
+
       setDailyData(allDailyArray)
       setSearch(allDailyArray)
+      
     }
 
     const searchRef_ = searchRef.current
     searchRef_.addEventListener('click', handleClick)
     
     if (arrayData.length === 0) {
-      fetchData()
+      fetchData('10-08-2024*20-08-2024')
     }
 
-  }, [accessTokenObj, arrayData, search, typeSearch, arrayData.length, dailyData])
+  }, [accessTokenObj, arrayData, search, arrayData.length, dailyData])
 
   
   function viewSelected(item) {    
@@ -345,67 +353,72 @@ const Register = () => {
       <Sidebar />
       <div className="registerContainer">
         <Navbar/>
-        <Goback title="Register" btn={<div></div>}/>
-        <div className="top">
-          <div className="left">
-            <div className='typeLable'>
-              <label htmlFor="type">Type Of Search : </label>
+        <div className='mainContainer'>
+          <Loading status={loadingStatus} page={"setProduct"} />
+          <Goback title="Register" btn={<div></div>}/>
+          <div className="top">
+            <div className="left">
+              <div className='typeLable'>
+                <label htmlFor="type">Type Of Search : </label>
+              </div>
+              <div className='typeInput' ref={typeSearchRef}>
+                <input type="radio" name="typeSearch" value="CAMION 01" /> CAMION 01
+                <input type="radio" name="typeSearch" value="CAMION 02" /> CAMION 02
+              </div>
             </div>
-            <div className='typeInput' ref={typeSearchRef}>
-              <input type="radio" name="typeSearch" value="CAMION 01" /> CAMION 01
-              <input type="radio" name="typeSearch" value="CAMION 02" /> CAMION 02
-            </div>
-          </div>
-          <div className="right">
-            <div className="days">
-              <input type="number" id="days-input" placeholder="Days After" />
-            </div>
-            <div className="search">
-              <input type="date" id="date-input" />
-              <SearchOutlinedIcon ref={searchRef} id="search-button" />
-            </div>
-          </div>
-        </div>
-        <div className="midel">
-          {viewSection}
-        </div>
-        <div className="bottom dataTable">
-          <div className="gridContainer">
-            <h1 className="title">Last Transactions</h1>
-            <div className="totalContainer">
-              <b>Total Capital : </b><b id='totalCapitalShow'>0 DA</b>
-            </div>
-            <div className="totalContainer">
-              <b>Total Payment : </b><b id='totalPaymentShow'>0 DA</b>
-            </div>
-            <div className="totalContainer">
-              <b>Total Credit : </b><b id='totalCreditShow'>0 DA</b>
-            </div>
-            <div className="totalContainer">
-              <b>Total Profit : </b><b id='totalProfitShow'>0 DA</b>
-            </div>
-            <div className="actionContainer">
-              {/* <div className="action View" >View</div>  */}
-              <div className="action Edit" onClick={selectedAction} >
-                <span className="textEdit">Edit Selected</span>
-                <span className="loadingEdit"><SyncIcon className="icnSpinnerEdit" /></span>
-              </div> 
-              <div className="action Delete" onClick={selectedAction} >
-                <span className="textDelete">Delete Selected</span>
-                <span className="loadingDelete"><SyncIcon className="icnSpinnerDelete" /></span>
+            <div className="right">
+              <div className='searchForm'>
+                <div className="search">
+                  <input type="date" id="date-input-one" />
+                </div>
+                <div className="search">
+                  <input type="date" id="date-input-two" />
+                </div>
+                <button type='button' className="searchBtn" ref={searchRef} id="search-button"> <SearchOutlinedIcon /> <b>Search</b></button>
               </div>
             </div>
           </div>
-          {/* <List data={arrayData} packageInfo={packageInfo} /> */}
-          <DataGrid
-            apiRef={apiRef}
-            className="datagrid"
-            rows={search}
-            columns={registerColumns.concat(actionRegisterColumn)}
-            pageSize={12}
-            rowsPerPageOptions={[12]}
-            checkboxSelection
-          />
+          <div className="midel">
+            {viewSection}
+          </div>
+          <div className="bottom dataTable">
+            <div className="gridContainer">
+              <h1 className="title">Last Transactions</h1>
+              <div className="totalContainer">
+                <b>Total Capital : </b><b id='totalCapitalShow'>0 DA</b>
+              </div>
+              <div className="totalContainer">
+                <b>Total Payment : </b><b id='totalPaymentShow'>0 DA</b>
+              </div>
+              <div className="totalContainer">
+                <b>Total Credit : </b><b id='totalCreditShow'>0 DA</b>
+              </div>
+              <div className="totalContainer">
+                <b>Total Profit : </b><b id='totalProfitShow'>0 DA</b>
+              </div>
+              <div className="actionContainer">
+                {/* <div className="action View" >View</div>  */}
+                <div className="action Edit" onClick={selectedAction} >
+                  <span className="textEdit">Edit Selected</span>
+                  <span className="loadingEdit"><SyncIcon className="icnSpinnerEdit" /></span>
+                </div> 
+                <div className="action Delete" onClick={selectedAction} >
+                  <span className="textDelete">Delete Selected</span>
+                  <span className="loadingDelete"><SyncIcon className="icnSpinnerDelete" /></span>
+                </div>
+              </div>
+            </div>
+            {/* <List data={arrayData} packageInfo={packageInfo} /> */}
+            <DataGrid
+              apiRef={apiRef}
+              className="datagrid"
+              rows={search}
+              columns={registerColumns.concat(actionRegisterColumn)}
+              pageSize={12}
+              rowsPerPageOptions={[12]}
+              checkboxSelection
+            />
+          </div>
         </div>
       </div>
     </div>

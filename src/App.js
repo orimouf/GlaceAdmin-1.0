@@ -9,6 +9,7 @@ import List from './pages/list/List'
 import Client from './pages/client/Client'
 import Order from './pages/order/Order'
 import Register from './pages/register/Register';
+import CreditList from './pages/creditlist/CreditList';
 import Daily from './pages/daily/Daily'
 import Error404 from './pages/error404/Error404'
 import { investorInputs, userInputs } from './formSource'
@@ -16,9 +17,6 @@ import { useContext } from 'react';
 import { DarkModeContext } from './context/darkModeContext'
 import { AuthContext } from './context/authContext/AuthContext'
 import Package from './pages/package/Package'
-import Setprofit from './pages/setprofit/Setprofit'
-import Withdrawal from './pages/withdrawal/Withdrawal'
-import Pay from './pages/pay/Pay'
 
 
 function App() {
@@ -54,7 +52,15 @@ function App() {
             <Route path='orders'>
               <Route index element={<Order title="Orders" />} />
               <Route path=':orderId' element={<Package />} />
+              <Route path='search/date' element={<Order title="Orders" type="date" />} />
+              <Route path='search/clientname' element={<Order title="Orders" type="clientName" />} />
+              <Route path='search/clientid' element={<Order title="Orders" type="clientId" />} />
               <Route path='new' element={<New inputs={investorInputs} title="Order" />} />
+            </Route>
+            <Route path='creditlist'>
+              <Route index element={<CreditList title="Credit List" />} />
+              <Route path=':orderId' element={<Package />} />
+              <Route path='new' element={<New inputs={investorInputs} title="Register" />} />
             </Route>
             <Route path='daily'>
               <Route index element={<Daily title="Daily" />} />
@@ -62,13 +68,10 @@ function App() {
               <Route path='new' element={<New inputs={investorInputs} title="Daily" />} />
             </Route>
             <Route path='setprofit'>
-              <Route index element={<Setprofit title="setprofit" />} />
+              {/* <Route index element={<Setprofit title="setprofit" />} /> */}
             </Route>
             <Route path='withdrawal'>
-              <Route index element={<Withdrawal title="Withdrawal" />} />
-            </Route>
-            <Route path='pay'>
-              <Route index element={<Pay title="Pay" />} />
+              {/* <Route index element={<Withdrawal title="Withdrawal" />} /> */}
             </Route>
           </>)
           || <Route path='*' element={<Error404 />}/> }

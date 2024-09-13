@@ -7,15 +7,26 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Switch from '@mui/material/Switch';
 import { useSnackbar } from 'notistack'
 import "./editDialog.scss"
+import { useRef } from 'react';
 
 export default function ScrollDialog(props) {
-  const [isCheck, setIsCheck] = React.useState(true);
-  const [isCredit, setIsCredit] = React.useState(true);
+  const item = props.paramsRow
+  
+  const [isCheck, setIsCheck] = React.useState((item.isCheck === "Check") ? true : false);
+  const [isCredit, setIsCredit] = React.useState((item.isCredit === "Credit") ? true : false);
   const [open, setOpen] = React.useState(false);
   const [scroll, setScroll] = React.useState('paper');
-  const item = props.paramsRow
   const typeOrder = (item.isCredit !== "Payment") ? "Order" : "Payment"
   const { enqueueSnackbar } = useSnackbar();
+  const inputRef1 = useRef();
+  const inputRef2 = useRef();
+  const inputRef3 = useRef();
+  const inputRef4 = useRef();
+  const inputRef5 = useRef();
+  const inputRef6 = useRef();
+  const inputRef7 = useRef();
+  const inputRef8 = useRef();
+  const inputRef9 = useRef();
 
   const handleClickVariant = (msg ,variant) => {
     // variant could be success, error, warning, info, or default
@@ -32,48 +43,42 @@ export default function ScrollDialog(props) {
     setOpen(false);
   };
 
-  const handleChange = (event) => {
-    setIsCheck(!event.target.checked);
+  const handleSwitch = (type) => {
+    if (type === "check") { setIsCheck(!isCheck) } else { setIsCredit(!isCredit) }    
   };
 
   const handleSave = () => {
-    const clientId = document.getElementById("inputId").value
-    const clientName = document.getElementById("inputName").value
-    const date = document.getElementById("inputDate").value
-    const camion = document.getElementById("inputCamion").value
-    const isCheck = document.getElementById("inputIsCheck").value
-    const isCredit = document.getElementById("inputIsCredit").value
-    const totalToPay = document.getElementById("inputTotalToPay").value
-    const verssi = document.getElementById("inputVerssi").value
-    const rest = document.getElementById("inputRest").value
+    const clientId = inputRef1.current.value
+    const clientName = inputRef2.current.value
+    const date = inputRef3.current.value
+    const camion = inputRef4.current.value
+    const totalToPay = inputRef7.current.value
+    const verssi = inputRef8.current.value
+    const rest = inputRef9.current.value
 
-    if (clientId !== "" && clientName !== "" && date !== "" && camion !== "" && isCheck !== "" && isCredit !== "" &&
+    if (clientId !== "" && clientName !== "" && date !== "" && camion !== "" &&
         totalToPay !== "" && verssi !== "" && rest !== "" ) {
             const newEdit = {
+                "_id": item._id,
                 "clientName": clientName,
-                "clientId": {
-                  "$oid": clientId
-                },
+                "clientId": clientId,
                 "totalToPay": totalToPay,
                 "verssi": verssi,
                 "rest": rest,
                 "date": date,
                 "camion": camion,
-                "isCheck": (isCheck === "1") ? true : false,
-                "isCredit": (isCredit === "1") ? true : false
+                "isCheck": isCheck,
+                "isCredit": isCredit
               }
-            props.editSelected(newEdit)
+
+            props.editSelected(newEdit, typeOrder)
             handleClose()
     } else {
         // popup msg Error with snackbar
         handleClickVariant(`Empty field.`, 'error')
     }
-
-    
-    
   };
 
-  
   const descriptionElementRef = React.useRef(null);
   React.useEffect(() => {
     if (open) {
@@ -103,40 +108,42 @@ export default function ScrollDialog(props) {
                     </div>
                     <div className="formInput mb-4">
                         <label>Client Id</label>
-                        <input id="inputId" type="text" placeholder="Client Id" defaultValue={item.clientId} />
+                        <input ref={inputRef1} id="inputId" type="text" placeholder="Client Id" defaultValue={item.clientId} />
                     </div>
                     <div className="formInput mb-4">
                         <label>Client Name</label>
-                        <input id="inputName" type="text" placeholder="Client Name" defaultValue={item.clientName} />
+                        <input ref={inputRef2} id="inputName" type="text" placeholder="Client Name" defaultValue={item.clientName} />
                     </div>
                     <div className="formInput mb-4">
                         <label>{typeOrder} Date</label>
-                        <input id="inputDate" type="text" placeholder={typeOrder + " Date"} defaultValue={item.date} />
+                        <input ref={inputRef3} id="inputDate" type="text" placeholder={typeOrder + " Date"} defaultValue={item.date} />
                     </div>
                     <div className="formInput mb-4">
                         <label>{typeOrder} Camion</label>
-                        <input id="inputCamion" type="text" placeholder={typeOrder + " Camion"} defaultValue={item.camion} />
+                        <input ref={inputRef4} id="inputCamion" type="text" placeholder={typeOrder + " Camion"} defaultValue={item.camion} />
                     </div>
-                    <div className="formInput mb-4">
-                        <label>{typeOrder} isCheck</label>
-                        <input id="inputIsCheck" type="text" placeholder={typeOrder + " isCheck"} defaultValue={item.isCheck} />
+                    <div className="formInput flexSB mb-4">
+                        <label className='lh2'>{typeOrder} isCheck</label>
+                        <Switch ref={inputRef5} checked={isCheck} onClick={() => handleSwitch("check")} inputProps={{ 'aria-label': 'controlled' }} />
                     </div>
-                    <div className="formInput mb-4">
-                        <label>{typeOrder} isCredit</label>
-                        <input id="inputIsCredit" type="text" placeholder={typeOrder + " isCredit"} defaultValue={item.isCredit} />
-                        <Switch checked={isCheck} onChange={handleChange} inputProps={{ 'aria-label': 'controlled' }} />
+                    {(typeOrder !== "Payment") && 
+                    <div className="formInput flexSB mb-4">
+                        <label className='lh2'>{typeOrder} isCredit</label>
+                        <Switch ref={inputRef6} checked={isCredit} onClick={() => handleSwitch("credit")} inputProps={{ 'aria-label': 'controlled' }} />
                     </div>
+                    }
+                    
                     <div className="formInput mb-4">
                         <label>{typeOrder} Total To Pay</label>
-                        <input id="inputTotalToPay" type="text" placeholder={typeOrder + " Total To Pay"} defaultValue={item.totalToPay} />
+                        <input ref={inputRef7} id="inputTotalToPay" type="text" placeholder={typeOrder + " Total To Pay"} defaultValue={item.totalToPay} />
                     </div>
                     <div className="formInput mb-4">
                         <label>{typeOrder} Verssi</label>
-                        <input id="inputVerssi" type="text" placeholder={typeOrder + " Verssi"} defaultValue={item.verssi} />
+                        <input ref={inputRef8} id="inputVerssi" type="text" placeholder={typeOrder + " Verssi"} defaultValue={item.verssi} />
                     </div>
                     <div className="formInput mb-4">
                         <label>{typeOrder} Rest</label>
-                        <input id="inputRest" type="text" placeholder={typeOrder + " Rest"} defaultValue={item.rest} />
+                        <input ref={inputRef9} id="inputRest" type="text" placeholder={typeOrder + " Rest"} defaultValue={item.rest} />
                     </div>
                 </div>
             </div>

@@ -2,9 +2,7 @@ import React from 'react'
 import './sidebar.scss'
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
-import CurrencyExchangeOutlinedIcon from '@mui/icons-material/CurrencyExchangeOutlined';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
-import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined';
 import QueryStatsOutlinedIcon from '@mui/icons-material/QueryStatsOutlined';
 import NotificationImportantOutlinedIcon from '@mui/icons-material/NotificationImportantOutlined';
 // import HealthAndSafetyOutlinedIcon from '@mui/icons-material/HealthAndSafetyOutlined';
@@ -59,16 +57,16 @@ const Sidebar = () => {
                         <span>REGISTRE</span>
                     </li>
                 </Link>
-                <Link to="/orders" style={{ textDecoration: "none" }}>
+                <Link to="/orders/search/date" style={{ textDecoration: "none" }}>
                     <li>
                         <AutoStoriesIcon className="icon" />
                         <span>Orders</span>
                     </li>
                 </Link>
-                <Link to="/" style={{ textDecoration: "none" }}>
+                <Link to="/creditlist" style={{ textDecoration: "none" }}>
                     <li>
-                        <LocalShippingOutlinedIcon className="icon" />
-                        <span>Delivery</span>
+                        <AttachMoneyIcon className="icon" />
+                        <span>List Credit</span>
                     </li>
                 </Link>
                 <p className="title">USEFUL</p>
