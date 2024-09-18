@@ -260,7 +260,7 @@ const Order = ({ title , type}) => {
   
   function viewSelected(item) {    
     document.getElementsByClassName("midel")[0].style.display = "flex";
-    setViewSection(<View orderDetail={item} />)
+    setViewSection(<View orderDetail={item} viewType="Order" />)
   }
 
   const editSelected = async (item, typeEdit) => {

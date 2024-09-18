@@ -5,14 +5,16 @@ import Home from './pages/home/Home'
 import Login from './pages/login/Login'
 import Single from './pages/single/Single'
 import New from './pages/new/New'
+import NewFacture from './pages/newfacture/NewFacture'
 import List from './pages/list/List'
 import Client from './pages/client/Client'
+import Facture from './pages/facture/Facture'
 import Order from './pages/order/Order'
 import Register from './pages/register/Register';
 import CreditList from './pages/creditlist/CreditList';
 import Daily from './pages/daily/Daily'
 import Error404 from './pages/error404/Error404'
-import { investorInputs, userInputs } from './formSource'
+import { investorInputs, userInputs, factureInputs } from './formSource'
 import { useContext } from 'react';
 import { DarkModeContext } from './context/darkModeContext'
 import { AuthContext } from './context/authContext/AuthContext'
@@ -43,6 +45,11 @@ function App() {
               <Route index element={<Client title="Clients" />} />
               <Route path=':clientId' element={<Package />} />
               <Route path='new' element={<New inputs={investorInputs} title="Client" />} />
+            </Route>
+            <Route path='factures'>
+              <Route index element={<Facture title="Factures" />} />
+              <Route path=':factureId' element={<Package />} />
+              <Route path='new' element={<NewFacture inputs={factureInputs} title="Facture" />} />
             </Route>
             <Route path='register'>
               <Route index element={<Register title="Register" />} />

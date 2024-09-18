@@ -176,6 +176,24 @@ export const orderColumns = [
     }}
 ]
 
+export const factureColumns = [
+    { field: "id", headerName: "ID", width: 60},
+    { field: "_id", headerName: "Order ID", width: 80},
+    { field: "factureNumber", headerName: "Facture Number", width: 60},
+    { field: "factureName", headerName: "Facture Name", width: 150},
+    { field: "productList", headerName: "Product List", width: 120},
+    { field: "factureTotal", headerName: "Facture Amante", width: 120 },
+    { field: "facturePayment", headerName: "Facture Payment", width: 100},
+    { field: "factureRest", headerName: "Facture Rest", width: 100},
+    { field: "factureDate", headerName: "Facture Date", width: 100},
+    { field: "statusPayment", headerName: "Status Payment", width: 100,
+    renderCell:(params)=>{
+        return(
+            <div className={`cellWithStatus ${params.row.statusPayment}`}>{params.row.statusPayment}</div>
+        )
+    }}
+]
+
 export const dailyColumns = [
     { field: "id", headerName: "ID", width: 60},
     { field: "date", headerName: "Date", width: 100},

@@ -11,6 +11,7 @@ import Filter7Icon from '@mui/icons-material/Filter7';
 import ExitToAppOutlinedIcon from '@mui/icons-material/ExitToAppOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
+import DescriptionIcon from '@mui/icons-material/Description';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
@@ -61,6 +62,12 @@ const Sidebar = () => {
                     <li>
                         <AutoStoriesIcon className="icon" />
                         <span>Orders</span>
+                    </li>
+                </Link>
+                <Link to="/factures" style={{ textDecoration: "none" }}>
+                    <li>
+                        <DescriptionIcon className="icon" />
+                        <span>Factures</span>
                     </li>
                 </Link>
                 <Link to="/creditlist" style={{ textDecoration: "none" }}>

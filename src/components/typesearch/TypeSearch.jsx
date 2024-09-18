@@ -30,10 +30,13 @@ const TypeSearch = ({ type, camionRef, searchRef }) => {
         <div className='typeLable'>
           <label htmlFor="type">Type Of Search : </label>
         </div>
-        <div className='typeInput typeCamion' ref={camionRef}>
-          <input type="radio" name="camion" value="CAMION 01" defaultChecked/> CAMION 01
-          <input type="radio" name="camion" value="CAMION 02" /> CAMION 02
-        </div>             
+        {(camionRef !== "Facture") ? 
+          <div className='typeInput typeCamion' ref={camionRef}>
+            <input type="radio" name="camion" value="CAMION 01" defaultChecked/> CAMION 01
+            <input type="radio" name="camion" value="CAMION 02" /> CAMION 02
+          </div> : <div className='typeInput'></div>
+        }
+                   
         <div className='typeInput'>
           <input type="radio" name="typeSearch" value="clientName" defaultChecked={clientName} onClick={() => handleNavigate("clientname")} /> Client Name
           <input type="radio" name="typeSearch" value="clientId" defaultChecked={clientId} onClick={() => handleNavigate("clientid")} /> Client ID 
